@@ -34,7 +34,7 @@ public class UsuarioWS {
 	@Path("/listausuarios")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String listaAtualizacao() {
-		listaAtualizacoes = daoUsuario.listaAtualizacoes(Usuario.class);
+		listaAtualizacoes = daoUsuario.listaUsuarios(Usuario.class);
 		System.out.println("Tamanho da lista: " + listaAtualizacoes.size());
 		gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String lista = gson.toJson(listaAtualizacoes);

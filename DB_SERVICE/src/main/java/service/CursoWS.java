@@ -40,6 +40,7 @@ public class CursoWS {
 	@Path("/listaatualizacao")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String listaAtualizacao() {
+		dao = new DAOCurso();
 		listaAtualizacoes = dao.listaAtualizacoes(Curso.class);
 		System.out.println("Tamanho da lista: " + listaAtualizacoes.size());
 		gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();

@@ -16,10 +16,10 @@ public class DAOUsuario {
 
 	EntityManager em;
 
-	public List listaAtualizacoes(Class T) {
+	public List listaUsuarios(Class T) {
 		em = ConectaBanco.getInstancia().getEm();
 		em.getTransaction().begin();
-		Query q = em.createQuery("from " + T.getSimpleName() + " where (statusSincronizacao is 'SINCRONIZADO')");
+		Query q = em.createQuery("from " + T.getSimpleName());
 		em.getTransaction().commit();
 		return q.getResultList();
 	}
