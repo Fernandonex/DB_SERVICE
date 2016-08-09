@@ -21,6 +21,7 @@ public class DAOCurso {
 		em.getTransaction().begin();
 		Query q = em.createQuery("from " + T.getSimpleName());
 		em.getTransaction().commit();
+		em.clear();
 		return q.getResultList();
 	}
 	
@@ -30,6 +31,7 @@ public class DAOCurso {
 		em.getTransaction().begin();
 		Query q = em.createQuery("from " + T.getSimpleName() + " where (registroUnico is '" + registro + "')");
 		em.getTransaction().commit();
+		em.clear();
 		return q.getResultList();
 	}
 	
@@ -40,6 +42,7 @@ public class DAOCurso {
 			em.getTransaction().begin();
 			retornando = em.find(classe, id);
 			em.getTransaction().commit();
+			em.clear();
 			return retornando;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -18,14 +18,12 @@ import com.google.gson.GsonBuilder;
 import dao.DAOCurso;
 import dao.DAOGenerico;
 import model.Curso;
-import model.Curso;
 
 @Path("/curso")
 public class CursoWS {
-	DAOCurso dao = new DAOCurso();
-	Curso user = new Curso();
+	DAOCurso dao;
 	Gson gson;
-	List<Curso> listaAtualizacoes = new ArrayList<Curso>();
+	
 
 	@GET
 	@Path("/olamundo")
@@ -41,6 +39,7 @@ public class CursoWS {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String listaAtualizacao() {
 		dao = new DAOCurso();
+		List<Curso> listaAtualizacoes = new ArrayList<Curso>();
 		listaAtualizacoes = dao.listaAtualizacoes(Curso.class);
 		System.out.println("Tamanho da lista: " + listaAtualizacoes.size());
 		gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();

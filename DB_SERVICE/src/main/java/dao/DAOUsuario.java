@@ -21,6 +21,7 @@ public class DAOUsuario {
 		em.getTransaction().begin();
 		Query q = em.createQuery("from " + T.getSimpleName());
 		em.getTransaction().commit();
+		em.clear();
 		return q.getResultList();
 	}
 
@@ -29,6 +30,7 @@ public class DAOUsuario {
 		em.getTransaction().begin();
 		Query q = em.createQuery("from " + T.getSimpleName() + " where (registroUnico is '" + registro + "')");
 		em.getTransaction().commit();
+		em.clear();
 		return q.getResultList();
 	}
 
@@ -38,6 +40,7 @@ public class DAOUsuario {
 			em.getTransaction().begin();
 			em.persist(objeto);
 			em.getTransaction().commit();
+			em.clear();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -51,6 +54,7 @@ public class DAOUsuario {
 			objeto = em.find(objeto.getClass(), getChave.invoke(objeto, new Object[0]));
 			em.remove(objeto);
 			em.getTransaction().commit();
+			em.clear();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -63,6 +67,7 @@ public class DAOUsuario {
 			em.getTransaction().begin();
 			em.merge(objeto);
 			em.getTransaction().commit();
+			em.clear();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,6 +80,7 @@ public class DAOUsuario {
 			em.getTransaction().begin();
 			retornando = em.find(classe, id);
 			em.getTransaction().commit();
+			em.clear();
 			return retornando;
 		} catch (Exception e) {
 			e.printStackTrace();
