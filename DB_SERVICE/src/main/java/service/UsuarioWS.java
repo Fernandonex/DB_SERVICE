@@ -34,12 +34,17 @@ public class UsuarioWS {
 	@Path("/listausuarios")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String listaAtualizacao() {
-		listaAtualizacoes = daoUsuario.listaUsuarios(Usuario.class);
+		try{
+			listaAtualizacoes = daoUsuario.listaUsuarios();
+		
 		System.out.println("Tamanho da lista: " + listaAtualizacoes.size());
 		gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String lista = gson.toJson(listaAtualizacoes);
 		System.out.println(lista);
 		return lista;
+		} catch(Exception e ){
+			return null;
+		}
 	}
 
 	@POST
@@ -56,11 +61,11 @@ public class UsuarioWS {
 			Usuario user = gson.fromJson(json, Usuario.class);
 			// Busca curso pelo RU
 			List<Curso> listaRegistroCurso = new ArrayList<Curso>();
-			listaRegistroCurso = daoCurso.procuraObjeto(Curso.class, user.getCurso().getRegistroUnico().toString());
+			listaRegistroCurso = daoCurso.procuraObjeto(user.getCurso().getRegistroUnico().toString());
 			// Percorre a lista com o Curso referente ao RU recuperado
 			for (Curso curso : listaRegistroCurso) {
 				// Busca a ID do curso no banco e atribui ao objetoCurso
-				Curso objetoCurso = (Curso) daoCurso.recuperaId(Curso.class, curso.getId());
+				Curso objetoCurso = (Curso) daoCurso.recuperaId(curso.getId());
 				// Inseri o usuario com o curso recuperado
 				user.setCurso(objetoCurso);
 				daoUsuario.inserir(user);
@@ -83,11 +88,11 @@ public class UsuarioWS {
 		try {
 			Usuario user = gson.fromJson(json, Usuario.class);
 			List<Usuario> listaRegistro = new ArrayList<Usuario>();
-			// Procura o objeto pelo registro unico
-			listaRegistro = daoUsuario.procuraObjeto(Usuario.class, user.getRegistroUnico());
+			// Procura o objeto usuario pelo registro unico
+			listaRegistro = daoUsuario.procuraObjeto(user.getRegistroUnico());
 			System.out.println("Total de registros: " + listaRegistro.size());
 			for (Usuario users : listaRegistro) {
-				Usuario alt = (Usuario) daoUsuario.recuperaId(Usuario.class, users.getId());
+				Usuario alt = (Usuario) daoUsuario.recuperaId(users.getId());
 				alt.setNome(user.getNome());
 				alt.setSenha(user.getSenha());
 				alt.setUsuario(user.getUsuario());
@@ -113,10 +118,10 @@ public class UsuarioWS {
 			Usuario user = gson.fromJson(json, Usuario.class);
 			List<Usuario> listaRegistro = new ArrayList<Usuario>();
 			// Procura o objeto pelo registro unico
-			listaRegistro = daoUsuario.procuraObjeto(Usuario.class, user.getRegistroUnico().toString());
+			listaRegistro = daoUsuario.procuraObjeto(user.getRegistroUnico().toString());
 			System.out.println("Total de registros: " + listaRegistro.size() + user.getRegistroUnico().toString());
 			for (Usuario users : listaRegistro) {
-				Usuario del = (Usuario) daoUsuario.recuperaId(Usuario.class, users.getId());
+				Usuario del = (Usuario) daoUsuario.recuperaId(users.getId());
 				daoUsuario.deletar(del);
 			}
 			return Response.status(200).build();
