@@ -2,6 +2,7 @@ package simulaWeb;
 
 import java.util.concurrent.Future;
 
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
@@ -16,16 +17,20 @@ public class Main {
 
 	public static void main(String[] args) {
 		DAOGenerico daoGenerico = new DAOGenerico();
-		/*
-		 * for (int i = 0; i < 3; i++) {
-		 * 
-		 * 
-		 * Curso curso = new Curso(); curso.setDescricao("DEscr");
-		 * curso.setNome("curso" + i); curso.setRegistroUnico("");
-		 * curso.setStatusSincronizacao("HABILITADO");
-		 * daoGenerico.inserir(curso); }
-		 */
+		Client cli = ClientBuilder.newClient();
+		/*for (int i = 0; i < 3; i++) {
+		Curso curso = new Curso(); curso.setDescricao("DEscr");
+		curso.setNome("curso" + i); 
+		curso.setStatusSincronizacao("HABILITADO");
+		daoGenerico.inserir(curso); }*/
+		for (int i=0; i>=0;i++){
+			WebTarget target = cli.target("http://localhost:8080/DB_SERVICE/curso/listaatualizacao");
+			String str = target.request().get(String.class);
+		}
 
+		
+		
+		
 		/*EntidadeAcademico academico = new EntidadeAcademico();
 		academico.setEmail("Fernando");
 		academico.setNomeAcademico("Fernando");
@@ -41,7 +46,7 @@ public class Main {
 			daoGenerico.inserir(curso);
 		}*/
 		
-		EntidadeAcademico acadRec= (EntidadeAcademico) daoGenerico.recuperaId(EntidadeAcademico.class, 1140L);
+		/*EntidadeAcademico acadRec= (EntidadeAcademico) daoGenerico.recuperaId(EntidadeAcademico.class, 1140L);
 		EntidadeCurso cursoRec= (EntidadeCurso) daoGenerico.recuperaId(EntidadeCurso.class, 1146L);
 System.out.println(acadRec.getNomeAcademico());
 System.out.println(cursoRec.getNomeCurso());
@@ -50,7 +55,7 @@ System.out.println(cursoRec.getNomeCurso());
 		relaciona.setAcademico(acadRec);
 		relaciona.setCurso(cursoRec);
 		relaciona.setPontuacao(1222);
-		daoGenerico.inserir(relaciona);
+		daoGenerico.inserir(relaciona);*/
 		
 		
 		

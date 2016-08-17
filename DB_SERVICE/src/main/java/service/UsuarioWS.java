@@ -34,16 +34,52 @@ public class UsuarioWS {
 	@Path("/listausuarios")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String listaAtualizacao() {
-		try{
+		try {
 			listaAtualizacoes = daoUsuario.listaUsuarios();
-		
-		System.out.println("Tamanho da lista: " + listaAtualizacoes.size());
-		gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		String lista = gson.toJson(listaAtualizacoes);
-		System.out.println(lista);
-		return lista;
-		} catch(Exception e ){
+
+			System.out.println("Tamanho da lista: " + listaAtualizacoes.size());
+			gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+			String lista = gson.toJson(listaAtualizacoes);
+			System.out.println(lista);
+			return lista;
+		} catch (Exception e) {
 			return null;
+		}
+	}
+
+	@POST
+	@Path("/cadastrar")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response inserirUsuario(String json) {
+		System.out.println("INSERIR: " + json);
+		daoUsuario = new DAOUsuario();
+		DAOCurso daoCurso = new DAOCurso();
+		gson = new Gson();
+		try {
+			// Converte json
+			Usuario user = gson.fromJson(json, Usuario.class);
+			Curso curso = (Curso) daoCurso.recuperaId(user.getCurso().getId());
+			user.setCurso(curso);
+			user.setStatusSincronizacao("SINCRONIZADO");
+			if (daoUsuario.inserir(user)) {
+				gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+				List<Usuario> usuarioRecuperado = daoUsuario.procuraPorEmail(user.getEmail());
+				String retorno = "";
+				for (Usuario usuarioRec : usuarioRecuperado) {
+					String usuarioRecJson = gson.toJson(usuarioRec, Usuario.class);
+					retorno = usuarioRecJson;
+				}
+				System.out.println(retorno);
+				return Response.status(200).entity(retorno).build();
+			} else {
+				return Response.status(500).build();
+			}
+
+		} catch (Exception e) {
+			System.out.println("Não inseriu, erro: " + e.getMessage());
+
+			throw new WebApplicationException(500);
 		}
 	}
 
@@ -59,19 +95,18 @@ public class UsuarioWS {
 		try {
 			// Converte json
 			Usuario user = gson.fromJson(json, Usuario.class);
-			// Busca curso pelo RU
-			List<Curso> listaRegistroCurso = new ArrayList<Curso>();
-			listaRegistroCurso = daoCurso.procuraObjeto(user.getCurso().getRegistroUnico().toString());
-			// Percorre a lista com o Curso referente ao RU recuperado
-			for (Curso curso : listaRegistroCurso) {
-				// Busca a ID do curso no banco e atribui ao objetoCurso
-				Curso objetoCurso = (Curso) daoCurso.recuperaId(curso.getId());
-				// Inseri o usuario com o curso recuperado
-				user.setCurso(objetoCurso);
-				daoUsuario.inserir(user);
+			Curso curso = (Curso) daoCurso.recuperaId(user.getCurso().getId());
+			user.setCurso(curso);
+			user.setStatusSincronizacao("SINCRONIZADO");
+			if (daoUsuario.inserir(user)) {
+				return Response.status(200).build();
+			} else {
+				return Response.status(500).build();
 			}
-			return Response.status(200).build();
-		} catch (Exception e) {
+
+		} catch (
+
+		Exception e) {
 			System.out.println("Não inseriu");
 			throw new WebApplicationException(500);
 		}
@@ -89,7 +124,7 @@ public class UsuarioWS {
 			Usuario user = gson.fromJson(json, Usuario.class);
 			List<Usuario> listaRegistro = new ArrayList<Usuario>();
 			// Procura o objeto usuario pelo registro unico
-			listaRegistro = daoUsuario.procuraObjeto(user.getRegistroUnico());
+			listaRegistro = daoUsuario.procuraPorEmail(user.getRegistroUnico());
 			System.out.println("Total de registros: " + listaRegistro.size());
 			for (Usuario users : listaRegistro) {
 				Usuario alt = (Usuario) daoUsuario.recuperaId(users.getId());
@@ -97,7 +132,11 @@ public class UsuarioWS {
 				alt.setSenha(user.getSenha());
 				alt.setUsuario(user.getUsuario());
 				alt.setStatusSincronizacao("SINCRONIZADO");
-				daoUsuario.alterar(users);
+				if (daoUsuario.alterar(users)) {
+					return Response.status(200).build();
+				} else {
+					return Response.status(500).build();
+				}
 			}
 			return Response.status(200).build();
 		} catch (Exception e) {
@@ -118,7 +157,7 @@ public class UsuarioWS {
 			Usuario user = gson.fromJson(json, Usuario.class);
 			List<Usuario> listaRegistro = new ArrayList<Usuario>();
 			// Procura o objeto pelo registro unico
-			listaRegistro = daoUsuario.procuraObjeto(user.getRegistroUnico().toString());
+			listaRegistro = daoUsuario.procuraPorEmail(user.getRegistroUnico().toString());
 			System.out.println("Total de registros: " + listaRegistro.size() + user.getRegistroUnico().toString());
 			for (Usuario users : listaRegistro) {
 				Usuario del = (Usuario) daoUsuario.recuperaId(users.getId());

@@ -44,22 +44,16 @@ public class CursoWS {
 	public  String listaAtualizacao() {
 		try {
 			dao = new DAOCurso();
-			List<Curso> listaAtualizacoes = new ArrayList<Curso>();
-			listaAtualizacoes = dao.listaAtualizacoes();
+			List<Curso> listaAtualizacoes = dao.listaAtualizacoes();
 			System.out.println("Tamanho da lista: " + listaAtualizacoes.size());
 			gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 			String lista = gson.toJson(listaAtualizacoes);
 			System.out.println(lista);
 			return lista;
 		} catch (Exception e) {
-			return null;
+			throw new WebApplicationException(500);
 		}
 	}
-	
-	
-	
-	
-	
 	
 }
 	

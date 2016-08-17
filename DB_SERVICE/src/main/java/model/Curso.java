@@ -26,6 +26,7 @@ public class Curso implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="idCurso")
+	@Expose
 	private Long id;
 	@Expose
 	private String nome;
@@ -33,8 +34,6 @@ public class Curso implements Serializable {
 	private String descricao;
 	@Expose
 	private String statusSincronizacao;
-	@Expose
-	private String registroUnico;
 	@OneToMany(cascade= CascadeType.ALL, mappedBy="curso")
 	private List<Usuario> listaUsuarios;
 	
@@ -43,6 +42,13 @@ public class Curso implements Serializable {
 	}
 	
 	
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+
 	public List<Usuario> getListaUsuarios() {
 		return listaUsuarios;
 	}
@@ -69,16 +75,6 @@ public class Curso implements Serializable {
 	
 	public Long getId(){
 		return id;
-	}
-	
-	public String getRegistroUnico() {
-		return registroUnico;
-	}
-
-
-	public void setRegistroUnico(String registroUnico) {
-		GregorianCalendar d = new GregorianCalendar();
-		this.registroUnico = this.nome + " - "+d.getTimeInMillis();
 	}
 
 	public String getStatusSincronizacao() {

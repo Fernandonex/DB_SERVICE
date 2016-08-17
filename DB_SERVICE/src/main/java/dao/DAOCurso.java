@@ -5,8 +5,11 @@ import model.Curso;
 import model.Usuario;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.transaction.Synchronization;
 
@@ -17,6 +20,25 @@ import javax.transaction.Synchronization;
 public class DAOCurso {
 
 	EntityManager em;
+	/*EntityManagerFactory fac = Persistence.createEntityManagerFactory("DB_SERVICE");
+	EntityManager em2 = fac.createEntityManager();
+
+	public synchronized List<Curso> listaAtualizacoes3() {
+		try {
+			em2.getTransaction().begin();
+			Query q = em2.createQuery("from " + Curso.class.getSimpleName());
+			em2.flush();
+			em2.getTransaction().commit();
+			return q.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			em2.clear();
+			em2.close();
+			fac.close();
+		}
+	}*/
 
 	public synchronized List<Curso> listaAtualizacoes() {
 		try {
@@ -37,17 +59,6 @@ public class DAOCurso {
 		}
 	}
 
-	// Nao funcional
-	@Deprecated
-	public List<Curso> listaAtualizacoes2() {
-		try {
-			em = ConectaBanco.getInstancia().getEm();
-			Query q = em.createQuery("from " + Curso.class.getSimpleName());
-			return q.getResultList();
-		} finally {
-			em.clear();
-		}
-	}
 
 	@SuppressWarnings("unchecked")
 	public List<Curso> procuraObjeto(String registro) {

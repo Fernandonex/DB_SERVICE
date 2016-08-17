@@ -32,11 +32,11 @@ public class DAOUsuario {
 		}
 	}
 
-	public List procuraObjeto(String registro) {
+	public List<Usuario> procuraPorEmail(String registro) {
 		try {
 			em = ConectaBanco.getInstancia().getEm();
 			em.getTransaction().begin();
-			Query q = em.createQuery("from " + Usuario.class.getSimpleName() + " where (registroUnico is '" + registro + "')");
+			Query q = em.createQuery("from " + Usuario.class.getSimpleName() + " where (email is '" + registro + "')");
 			em.flush();
 			em.getTransaction().commit();
 			em.clear();
@@ -48,7 +48,7 @@ public class DAOUsuario {
 		}
 	}
 
-	public void inserir(Object objeto) {
+	public boolean inserir(Object objeto) {
 		try {
 			em = ConectaBanco.getInstancia().getEm();
 			em.getTransaction().begin();
@@ -56,9 +56,11 @@ public class DAOUsuario {
 			em.flush();
 			em.getTransaction().commit();
 			em.clear();
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			em.getTransaction().rollback();
+			return false;
 		}
 	}
 
@@ -79,7 +81,7 @@ public class DAOUsuario {
 
 	}
 
-	public void alterar(Object objeto) {
+	public boolean alterar(Object objeto) {
 		try {
 			em = ConectaBanco.getInstancia().getEm();
 			em.getTransaction().begin();
@@ -87,8 +89,11 @@ public class DAOUsuario {
 			em.flush();
 			em.getTransaction().commit();
 			em.clear();
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			em.getTransaction().rollback();
+			return false;
 		}
 	}
 
